@@ -25,11 +25,11 @@ class LocationScreen extends StatelessWidget {
                   child: Container(
                     margin: EdgeInsets.all(10),
                     child: TextField(
-                      onChanged: (t) {
+                      /*onChanged: (t) {
                         context.bloc<LocationQueryBloc>().add(
                               FetchLocationEvent(searchTextController.text),
                             );
-                      },
+                      },*/
                       controller: searchTextController,
                       decoration: InputDecoration(
                         hintText: 'Enter a Location',
@@ -66,6 +66,7 @@ class LocationScreen extends StatelessWidget {
 
   Widget _buildResults(BuildContext context) {
     return BlocBuilder<LocationQueryBloc, List<Location>>(
+      cubit: context.bloc<LocationQueryBloc>(),
       builder: (context, locations) {
         return Container(
           child: (locations != null && locations.isNotEmpty)
@@ -75,13 +76,13 @@ class LocationScreen extends StatelessWidget {
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       onTap: () {
-                        context.bloc<LocationBloc>().add(locations[index]);
+                        context.bloc<LocationBloc>().add(SetLocationEvent(locations[index]));
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) {
                               return BlocProvider(
                                 create: (context) => RestaurantQueryBloc(locations[index]),
-                                child: RestaurantSearchScreen(),
+                                child: RestaurantSearchScreen(locations[index]),
                               );
                             }
                           ),

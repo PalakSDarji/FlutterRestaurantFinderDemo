@@ -7,12 +7,28 @@ void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   // This widget is the root of your application.
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  LocationBloc locationBloc;
+
+  @override
+  void initState() {
+    super.initState();
+
+    locationBloc = LocationBloc(AskLocationState());
+    //fetch location first if available
+    locationBloc.add(GetLocationEvent());
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (BuildContext context) => LocationBloc(null),
+      create: (BuildContext context) => locationBloc,
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
@@ -22,5 +38,11 @@ class MyApp extends StatelessWidget {
         home: MainScreen(),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    locationBloc.close();
   }
 }

@@ -1,16 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:my_bloc_flutter_app/BLoC/LocationBloc.dart';
 import 'package:my_bloc_flutter_app/BLoC/RestaurantQueryBloc.dart';
 import 'package:my_bloc_flutter_app/UI/home_screen.dart';
 import 'package:my_bloc_flutter_app/model/Location.dart';
 import 'package:my_bloc_flutter_app/model/Restaurant.dart';
 
-class RestaurantSearchScreen extends StatelessWidget {
+class RestaurantSearchScreen extends StatefulWidget {
+  final Location location;
+
+  RestaurantSearchScreen(this.location);
+
+  @override
+  _RestaurantSearchScreenState createState() => _RestaurantSearchScreenState();
+}
+
+class _RestaurantSearchScreenState extends State<RestaurantSearchScreen> {
+  RestaurantQueryBloc blocRestaurant;
+
+  @override
+  void initState() {
+    super.initState();
+    blocRestaurant = RestaurantQueryBloc(widget.location);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    blocRestaurant.close();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final blocLocation = context.bloc<LocationBloc>();
-    final blocRestaurant = RestaurantQueryBloc(blocLocation.selectedLocation);
     final searchTextController = TextEditingController();
 
     return BlocProvider<RestaurantQueryBloc>(
@@ -28,11 +48,11 @@ class RestaurantSearchScreen extends StatelessWidget {
                     child: Container(
                       margin: EdgeInsets.all(10),
                       child: TextField(
-                        onChanged: (t) {
+                        /*onChanged: (t) {
                           context.bloc<RestaurantQueryBloc>().add(
                                 FetchRestaurantEvent(searchTextController.text),
                               );
-                        },
+                        },*/
                         controller: searchTextController,
                         decoration: InputDecoration(
                           hintText: 'Search restaurant..',
