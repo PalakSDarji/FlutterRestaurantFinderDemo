@@ -6,26 +6,32 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class LocationProvider extends ChangeNotifier{
 /*
-
   Location _location;
-
   Location get location => _location;
-*/
-
+  */
   Future<Location> getLocationFromSharedPref() async {
     final pref = await SharedPreferences.getInstance();
-    Location savedLocation = jsonDecode(pref.get("location"));
-    print("savedLocation : $savedLocation");
+    Location savedLocation = Location.fromJson(json.decode(pref.getString("location")));
     return savedLocation;
   }
 
-  void setLocationToSharedPref(Location location) async {
+  void _setLocationToSharedPref(Location location) async {
     final pref = await SharedPreferences.getInstance();
-    pref.setString("location", jsonEncode(location));
+    if(location == null){
+      if(pref.containsKey("location")) pref.remove("location");
+    }
+    else{
+      pref.setString("location", json.encode(location));
+    }
   }
 
   void setLocation(Location location){
-    setLocationToSharedPref(location);
+    _setLocationToSharedPref(location);
+    notifyListeners();
+  }
+
+  void removeLocation(){
+    _setLocationToSharedPref(null);
     notifyListeners();
   }
 }

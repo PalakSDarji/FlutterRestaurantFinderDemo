@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_bloc_flutter_app/BLoC/RestaurantProvider.dart';
 import 'package:my_bloc_flutter_app/BLoC/RestaurantQueryBloc.dart';
 import 'package:my_bloc_flutter_app/UI/home_screen.dart';
 import 'package:my_bloc_flutter_app/model/Location.dart';
 import 'package:my_bloc_flutter_app/model/Restaurant.dart';
+import 'package:provider/provider.dart';
 
 class RestaurantSearchScreen extends StatefulWidget {
   final Location location;
 
   RestaurantSearchScreen(this.location);
+
+  final PageRouteBuilder _homeRoute = PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => HomeScreen(),
+  );
 
   @override
   _RestaurantSearchScreenState createState() => _RestaurantSearchScreenState();
@@ -101,11 +107,17 @@ class _RestaurantSearchScreenState extends State<RestaurantSearchScreen> {
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       onTap: () {
-                        Navigator.of(context).push(
+                        /*Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) => HomeScreen(),
                           ),
-                        );
+                        );*/
+
+                        final selectedRestaurant = Provider.of<RestaurantProvider>(context,listen: false);
+                        selectedRestaurant.setSelectedRestaurant(restaurants[index]);
+
+                        Navigator.of(context).pushAndRemoveUntil(
+                            widget._homeRoute, (route) => false);
                       },
                       child: Container(
                         margin: EdgeInsets.all(10),

@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-class Location extends Equatable{
+class Location extends Equatable {
   final int id;
   final String type;
   final String title;
@@ -9,8 +9,10 @@ class Location extends Equatable{
 
   Location.fromJson(Map json)
       : id = json['entity_id'],
-        type = json['entity_type'], 
+        type = json['entity_type'],
         title = json['title'];
+
+  Map<String, dynamic> toJson() => {'entity_id': id, 'entity_type': type, 'title': title};
 
   Location copyWith({
     int id,
@@ -25,5 +27,5 @@ class Location extends Equatable{
   }
 
   @override
-  List<Object> get props => [id,title,type];
+  List<Object> get props => [id, title, type];
 }

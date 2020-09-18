@@ -2,10 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_bloc_flutter_app/BLoC/LocationBloc.dart';
+import 'package:my_bloc_flutter_app/BLoC/LocationProvider.dart';
 import 'package:my_bloc_flutter_app/BLoC/LocationQueryBloc.dart';
 import 'package:my_bloc_flutter_app/BLoC/RestaurantQueryBloc.dart';
 import 'package:my_bloc_flutter_app/UI/restaurant_search_screen.dart';
 import 'package:my_bloc_flutter_app/model/Location.dart';
+import 'package:provider/provider.dart';
 
 class LocationScreen extends StatelessWidget {
   @override
@@ -76,7 +78,7 @@ class LocationScreen extends StatelessWidget {
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       onTap: () {
-                        context.bloc<LocationBloc>().add(SetLocationEvent(locations[index]));
+                        Provider.of<LocationProvider>(context, listen: false).setLocation(locations[index]);
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) {
